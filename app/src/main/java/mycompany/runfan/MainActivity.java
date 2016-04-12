@@ -46,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                // 
                 drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+
+                    // navigation drawer closed
                     @Override
                     public void onDrawerClosed(View drawerView) {
                         super.onDrawerClosed(drawerView);
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                         tx.commit();
                     }
 
+                    // navigation drawer opened
                     @Override
                     public void onDrawerOpened(View drawerView) {
                         super.onDrawerOpened(drawerView);
