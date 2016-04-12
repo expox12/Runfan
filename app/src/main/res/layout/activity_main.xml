@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- contenedor principal -->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawerlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+        <!-- contendido -->
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <!-- toolbar -->
+            <include
+                layout="@layout/toolbar" >
+            </include>
+
+            <!-- main content view -->
+            <FrameLayout
+                android:id="@+id/maincontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    <!-- navigation drawer -->
+    <ListView
+        android:id="@+id/lista_izq"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:background="#FFFFFF" >
+
+    </ListView>
+
+</android.support.v4.widget.DrawerLayout>
