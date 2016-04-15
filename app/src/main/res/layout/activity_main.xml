@@ -17,14 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <!-- contendido -->
+        <!-- contendido de toda la pantalla excepto el toolbar -->
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <!-- main content view -->
+            <!-- main content view (fragments) -->
             <FrameLayout
                 android:id="@+id/maincontent"
                 android:layout_width="match_parent"

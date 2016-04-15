@@ -1,5 +1,6 @@
 package mycompany.runfan;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     // Toolbar(Barra de herramientas)
     private Toolbar myToolBar;
 
+    ActionBarDrawerToggle drawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         // Instancio el listview para poder meter un adapter
         drawerList = (ListView) findViewById(R.id.lista_izq);
         drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_1, listaDePlanetas));
+
 
     /*    drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             // Cuando un item ha sido seleccionado en la lista
@@ -84,12 +88,11 @@ public class MainActivity extends AppCompatActivity {
     public void iniciarToolbar() {
         myToolBar = (Toolbar) findViewById(R.id.mytoolbar);
 
-        // Establezco el toolbar como barra de herramientas del Activity
+        // Establezco el toolbar como el action bar del Activity
         if(myToolBar != null)
             setSupportActionBar(myToolBar);
 
         // Establezco un "home" para el action bar
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     public void setupInterctiveMenu() {
 
         // Esta clase proporciona una forma práctica de unir la funcionalidad de DrawerLayout y el action bar
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, myToolBar, R.string.open, R.string.close) {
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, myToolBar, R.string.open, R.string.close) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.syncState();
 
     }
-    
+
     // Instancio el menu para que se muestre en el toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,4 +142,21 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void setFragments() {
+
+    }
+
 }
