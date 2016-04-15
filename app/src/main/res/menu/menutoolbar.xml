@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_favorite"
-        android:icon="@drawable/mas"
+        android:icon="@drawable/circulo"
         android:title="@string/title_add"
         app:showAsAction="ifRoom" />
 
