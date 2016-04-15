@@ -1,15 +1,16 @@
 package mycompany.runfan;
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,44 +22,52 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private String[] listaDePlanetas;
-    private DrawerLayout drawerLayout;
+
     private ListView drawerList;
     final private String[] fragments = {"mycompany.runfan.fragments.FragmentOne", "adasdasdasdasd"};
+
+    // Contenedor principal donde van a interactuar las vistas
+    private DrawerLayout drawerLayout;
+
+    // Toolbar(Barra de herramientas)
+    private Toolbar myToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Instancio el toolbar e incorporo el objeto al Activity
-        Toolbar myToolBar = (Toolbar) findViewById(R.id.mytoolbar);
-        setSupportActionBar(myToolBar);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
+
+        iniciarToolbar();
+
+        setupInterctiveMenu();
 
         // Saco la información del array xml
         listaDePlanetas = getResources().getStringArray(R.array.planetas);
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
 
         // Instancio el listview para poder meter un adapter
         drawerList = (ListView) findViewById(R.id.lista_izq);
         drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_1, listaDePlanetas));
 
-        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    /*    drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            // Cuando un item ha sido seleccionado en la lista
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                // creo un escuchador para el drawerlayout. Lo creo ya que me interesa mostrar un fragment dependiendo si este layoput esta desplegado o no.
                 drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
 
-                    // navigation drawer closed
+                    // and when navigation drawer closed...
                     @Override
                     public void onDrawerClosed(View drawerView) {
                         super.onDrawerClosed(drawerView);
-
                         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
                         tx.replace(R.id.maincontent, Fragment.instantiate(MainActivity.this, fragments[0]));
                         tx.commit();
                     }
 
-                    // navigation drawer opened
+                    // or when navigation drawer opened...
                     @Override
                     public void onDrawerOpened(View drawerView) {
                         super.onDrawerOpened(drawerView);
@@ -69,8 +78,60 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.maincontent, Fragment.instantiate(MainActivity.this, fragments[0]));
+        tx.replace(R.id.maincontent, Fragment.instantiate(MainActivity.this, fragments[0]));*/
     }
+
+    public void iniciarToolbar() {
+        myToolBar = (Toolbar) findViewById(R.id.mytoolbar);
+
+        // Establezco el toolbar como barra de herramientas del Activity
+        if(myToolBar != null)
+            setSupportActionBar(myToolBar);
+
+        // Establezco un "home" para el action bar
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    public void setupInterctiveMenu() {
+
+        // Esta clase proporciona una forma práctica de unir la funcionalidad de DrawerLayout y el action bar
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, myToolBar, R.string.open, R.string.close) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                Toast.makeText(getApplicationContext(), "onDrawerClosed", Toast.LENGTH_SHORT).show();
+                invalidateOptionsMenu();
+                syncState();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+                syncState();
+            }
+        };
+
+        // Añado drawerToggle como escuchador al drawerLayout
+        drawerLayout.addDrawerListener(drawerToggle);
+
+        // Mantiene sincronizados drawerToggle y drawerLayout
+        drawerToggle.syncState();
+
+    }
+
+    // Instancio el toolbar y le aplico una configuración
+ /*   public Toolbar iniciarToolbar() {
+        Toolbar myToolBar = (Toolbar) findViewById(R.id.mytoolbar);
+        setSupportActionBar(myToolBar);
+        DrawerArrowDrawable drawerArrow = new DrawerArrowDrawable(this);
+        drawerArrow.setColor(Color.WHITE);
+        myToolBar.setNavigationIcon(drawerArrow);
+        return  myToolBar;
+
+    }*/
 
     // Instancio el menu para que se muestre en el toolbar
     @Override
