@@ -121,18 +121,7 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.syncState();
 
     }
-
-    // Instancio el toolbar y le aplico una configuración
- /*   public Toolbar iniciarToolbar() {
-        Toolbar myToolBar = (Toolbar) findViewById(R.id.mytoolbar);
-        setSupportActionBar(myToolBar);
-        DrawerArrowDrawable drawerArrow = new DrawerArrowDrawable(this);
-        drawerArrow.setColor(Color.WHITE);
-        myToolBar.setNavigationIcon(drawerArrow);
-        return  myToolBar;
-
-    }*/
-
+    
     // Instancio el menu para que se muestre en el toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
