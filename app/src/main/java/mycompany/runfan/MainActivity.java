@@ -1,20 +1,26 @@
 package mycompany.runfan;
 
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import mycompany.runfan.adapters.NavigationAdapter;
+import mycompany.runfan.fragments.HomeFragment;
 
 
 /**
@@ -22,10 +28,17 @@ import android.widget.Toast;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private String[] listaDePlanetas;
+    // array list donde se van almacenando cada fila(imágen y texto) del menu lateral(navigation)
+    private ArrayList<item_object> navItems;
+
+    private String[] navTitles; // array de los titulos
+    TypedArray navIcons; // array para los ficheros 'res'
+
+    // Adaptador menu lateral
+    NavigationAdapter navAdapter;
 
     private ListView drawerList;
-    final private String[] fragments = {"mycompany.runfan.fragments.FragmentOne", "adasdasdasdasd"};
+    final private String[] fragments = { "mycompany.runfan.fragments.HomeFragment", "mycompany.runfan.fragments.FragmentTwo" };
 
     // Contenedor principal donde van a interactuar las vistas
     private DrawerLayout drawerLayout;
@@ -46,43 +59,57 @@ public class MainActivity extends AppCompatActivity {
 
         setupInterctiveMenu();
 
-        // Saco la información del array xml
-        listaDePlanetas = getResources().getStringArray(R.array.planetas);
+        // Saco la información del xml
+        navTitles = getResources().getStringArray(R.array.nav_options);
+        navIcons = getResources().obtainTypedArray(R.array.nav_icons);
+
+        // Creo un array list de tipo item_object y lo relleno de datos.
+        navItems = new ArrayList<>();
+        for (int i = 0; i < navTitles.length; i++)
+            navItems.add(new item_object(navTitles[i], navIcons.getResourceId(i, -1)));
+
+        navAdapter = new NavigationAdapter(this, navItems);
 
         // Instancio el listview para poder meter un adapter
         drawerList = (ListView) findViewById(R.id.lista_izq);
-        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_1, listaDePlanetas));
+        drawerList.setAdapter(navAdapter);
 
-
-    /*    drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            // Cuando un item ha sido seleccionado en la lista
+        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                // creo un escuchador para el drawerlayout. Lo creo ya que me interesa mostrar un fragment dependiendo si este layoput esta desplegado o no.
-                drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-
-                    // and when navigation drawer closed...
-                    @Override
-                    public void onDrawerClosed(View drawerView) {
-                        super.onDrawerClosed(drawerView);
-                        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-                        tx.replace(R.id.maincontent, Fragment.instantiate(MainActivity.this, fragments[0]));
-                        tx.commit();
-                    }
-
-                    // or when navigation drawer opened...
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
-                        super.onDrawerOpened(drawerView);
-                        Toast.makeText(getApplicationContext(), "llamada a onDrawOpened", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                drawerLayout.closeDrawer(drawerList);
+                mostrarFragment(position);
             }
         });
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.maincontent, Fragment.instantiate(MainActivity.this, fragments[0]));*/
+
+    }
+
+    public void mostrarFragment(int posicion) {
+        Fragment fragment = null;
+        switch (posicion) {
+            case 0:
+                fragment = new HomeFragment();
+                break;
+
+            default:
+                Toast.makeText(this, "Opción " + navTitles[posicion] + " no disponible!", Toast.LENGTH_SHORT).show();
+                fragment = new HomeFragment();
+                posicion = 0;
+                break;
+        }
+        if(fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.maincontent, fragment).commit();
+
+            drawerList.setItemChecked(posicion, true);
+            drawerList.setSelection(posicion);
+
+            setTitle(navTitles[posicion]);
+
+            drawerLayout.closeDrawer(drawerList);
+        } else {
+            Log.e("Error ", "mostrarFragment " + posicion);
+        }
     }
 
     public void iniciarToolbar() {
@@ -143,20 +170,19 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    // Este método es llamado en el momento en el cual el Activity se ha cargado por completo.
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
     }
 
+    // Se ejecuta este metodo cuando la configuracion del dispositivo cambia y hay una Activity en curso
+    // La nueva configuracion hay que indicarla en el AndroidManifest.xml
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    public void setFragments() {
-
     }
 
 }

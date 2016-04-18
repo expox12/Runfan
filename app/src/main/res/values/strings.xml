@@ -3,4 +3,16 @@
     <string name="title_add">Añadir</string>
     <string name="open">Abierto</string>
     <string name="close">Cerrado</string>
+
+    <string-array name="nav_options">
+        <item>Perfil</item>
+        <item>Favoritos</item>
+        <item>Eventos</item>
+    </string-array>
+
+    <array name="nav_icons">
+        <item>@drawable/ic_one</item>
+        <item>@drawable/ic_two</item>
+        <item>@drawable/ic_three</item>
+    </array>
 </resources>

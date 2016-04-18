@@ -9,7 +9,7 @@
         android:id="@+id/f1TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mercurio"
+        android:text="ESTE ES EL HOME"
         android:padding="15dp"/>
 
 </LinearLayout>
